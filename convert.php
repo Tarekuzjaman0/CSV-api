@@ -1,24 +1,27 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvFile'])) {
     $file = $_FILES['csvFile']['tmp_name'];
-    $startIndex = isset($_POST['startIndex']) ? (int)$_POST['startIndex'] : 1;
-    $endIndex = isset($_POST['endIndex']) ? (int)$_POST['endIndex'] : PHP_INT_MAX;
 
     if (($handle = fopen($file, 'r')) !== false) {
         $jsonData = [];
-        $currentIndex = $startIndex;
+        $seenQuestions = [];
 
         while (($data = fgetcsv($handle)) !== false) {
-            if (count($data) >= 6 && $currentIndex <= $endIndex) {
-                $jsonData[] = [
-                    "question" => "{$currentIndex}.{$data[1]}",
-                    "answer1" => $data[2],
-                    "answer2" => $data[3],
-                    "answer3" => $data[4],
-                    "answer4" => $data[5],
-                    "correct" => $data[6],
-                ];
-                $currentIndex++;
+            if (count($data) >= 6) {
+                $question = trim($data[1]);
+
+                // যদি একই প্রশ্ন আগেই যুক্ত হয়ে থাকে তবে এটি বাদ দেওয়া হবে
+                if (!in_array($question, $seenQuestions)) {
+                    $jsonData[] = [
+                        "question" => $question,
+                        "answer1" => $data[2],
+                        "answer2" => $data[3],
+                        "answer3" => $data[4],
+                        "answer4" => $data[5],
+                        "correct" => $data[6],
+                    ];
+                    $seenQuestions[] = $question; // প্রশ্ন সংরক্ষণ করা হচ্ছে
+                }
             }
         }
         fclose($handle);

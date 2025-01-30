@@ -8,17 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>CSV to JSON Converter with Index</h1>
+        <h1>CSV to JSON Converter</h1>
         <form action="convert.php" method="post" enctype="multipart/form-data">
             <label for="csvFile">Upload your CSV file:</label>
             <input type="file" name="csvFile" id="csvFile" accept=".csv" required>
-
-            <label for="startIndex">Start Index:</label>
-            <input type="number" name="startIndex" id="startIndex" placeholder="Start index (e.g., 1)" required>
-
-            <label for="endIndex">End Index:</label>
-            <input type="number" name="endIndex" id="endIndex" placeholder="End index (e.g., 10)" required>
-
             <button type="submit">Convert to JSON</button>
         </form>
     </div>
